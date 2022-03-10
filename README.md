@@ -2,6 +2,8 @@
 `rekt` is a lightweight, non-bloated redis client, primarily written for the [kotlin](https://kotlinlang.org/) programming language, while also supporting 
 other JVM-based languages, such as [Java](https://www.java.com/en/), [Scala](https://www.scala-lang.org/), and obviously way more.
 
+`rekt` doesn't aim to have the most features possible - it aims to do what a redis client is **supposed to do**: handle redis messaging.
+
 # Why use REKT
 * You probably **should not** if you're working on a production server, REKT is still unstable and in heavy development, however we do have some benefits over other libraries:
   * Lightweight, not-bloated
@@ -12,7 +14,7 @@ other JVM-based languages, such as [Java](https://www.java.com/en/), [Scala](htt
 # Features
 * Basic in-memory cache (`HSET`, `SET`, `HGET`, `GET`, `HGETALL`, etc.)
 * Able to call whatever redis command you want through `RedisConnection#call(vararg Any)`
-* Basic pub/sub ⚠️
+* Basic PUB/SUB ⚠️
 
 # Communication
 * [Personal Discord Server](https://discord.gg/Jx6sHxzF55) (#rekt-support channel)
