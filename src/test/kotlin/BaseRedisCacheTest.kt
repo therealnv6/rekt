@@ -7,7 +7,7 @@ class BaseRedisCacheTest
     @Test
     fun createPool()
     {
-        val pool = Redis.createConnection()
+        val pool = Redis.create()
 
         pool.hset("fuck", "dir", "40")
         pool.hset("fuck", "fir", "hello")
@@ -21,7 +21,7 @@ class BaseRedisCacheTest
     @Test
     fun pubSubTest()
     {
-        val pool = Redis.createConnection()
+        val pool = Redis.create()
 
         pool.subscribe("test") {
             println(it)

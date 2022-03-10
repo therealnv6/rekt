@@ -62,8 +62,45 @@ class RedisConnection(
         call<ByteArray>("HSET", hash, key, value)
     }
 
+    fun hset(key: String, value: Any)
+    {
+        val split = key.split("/")
+
+        if (split.size != 2)
+        {
+            throw IllegalArgumentException("Provided key is $key, must be formatted like 'hash/key'")
+        }
+
+        hset(split[0], split[1], value)
+    }
+
+    @JvmName("hgetInline")
+    inline fun <reified T : Any> hget(key: String): T?
+    {
+        val split = key.split("/")
+
+        if (split.size != 2)
+        {
+            throw IllegalArgumentException("Provided key is $key, must be formatted like 'hash/key'")
+        }
+
+        return hget(split[0], split[1])
+    }
+
     @JvmName("hgetInline")
     inline fun <reified T : Any> hget(hash: String, key: String) = hget(hash, key, T::class.java)
+
+    fun <T : Any> hget(key: String, type: Class<T>) : T?
+    {
+        val split = key.split("/")
+
+        if (split.size != 2)
+        {
+            throw IllegalArgumentException("Provided key is $key, must be formatted like 'hash/key'")
+        }
+
+        return hget(split[0], split[1], type)
+    }
 
     fun <T : Any> hget(hash: String, key: String, type: Class<T>): T?
     {
@@ -156,7 +193,7 @@ class RedisConnection(
         )
     }
 
-    fun subscribe(vararg channel: String, subscriber: (message: String) -> Unit, )
+    fun subscribe(vararg channel: String, subscriber: (message: String) -> Unit)
     {
         subscribe(
             subscriber = { _, message -> subscriber.invoke(message) },

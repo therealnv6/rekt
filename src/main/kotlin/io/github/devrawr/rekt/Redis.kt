@@ -66,7 +66,7 @@ object Redis
         }
     }
 
-    fun createConnection(
+    fun create(
         socket: Socket,
         decoder: Decoder = this.decoder,
         encoder: Encoder = this.encoder
@@ -75,14 +75,14 @@ object Redis
         return RedisConnection(socket, decoder, encoder)
     }
 
-    fun createConnection(
+    fun create(
         hostname: String = "127.0.0.1",
         port: Int = 6379,
         decoder: Decoder = this.decoder,
         encoder: Encoder = this.encoder
     ): RedisConnection
     {
-        return this.createConnection(
+        return this.create(
             socket = Socket(hostname, port),
             decoder = decoder,
             encoder = encoder
