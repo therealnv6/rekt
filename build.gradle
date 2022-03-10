@@ -10,8 +10,8 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    api "org.jetbrains.kotlin:kotlin-stdlib"
+    testApi 'org.jetbrains.kotlin:kotlin-test'
 }
 
 test {

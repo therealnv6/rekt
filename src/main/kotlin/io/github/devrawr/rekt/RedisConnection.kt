@@ -25,6 +25,7 @@ class RedisConnection(
     fun <T> call(vararg args: Any): T?
     {
         encoder.write(output, args.toList())
+        Thread.sleep(0, 1) // ??? doesn't work without this. someone, help?
         output.flush()
 
         return this.read()

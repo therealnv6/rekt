@@ -13,9 +13,13 @@ class BaseRedisCacheTest
         pool.hset("fuck", "fir", "hello")
         pool.hset("fuck", "sir", 39)
 
-        assertEquals(39, pool.hget<Long>("fuck", "sir"))
-        assertEquals(40, pool.hget<Long>("fuck", "dir"))
-        assertEquals("hello", pool.hget("fuck", "fir"))
+        listOf(
+            pool.hget<Long>("fuck", "sir"), // saved as int, read as long
+            pool.hget<Long>("fuck", "dir"), // saved as string, read as long
+            pool.hget<String>("fuck", "fir") // saved as string, read as string
+        ).forEach {
+            println(it)
+        }
     }
 
     @Test
