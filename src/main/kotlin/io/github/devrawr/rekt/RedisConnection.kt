@@ -4,11 +4,13 @@ import io.github.devrawr.rekt.convert.Converters
 import io.github.devrawr.rekt.encoding.Encoder
 import io.github.devrawr.rekt.decoding.Decoder
 import io.github.devrawr.rekt.pubsub.Subscriber
+import io.github.devrawr.rekt.pubsub.DataStream
 import java.io.*
 import java.net.Socket
 
 class RedisConnection(
     socket: Socket,
+    private val dataStream: DataStream,
     private val decoder: Decoder,
     private val encoder: Encoder
 )
@@ -40,7 +42,8 @@ class RedisConnection(
 
     fun call(vararg args: Any) = call(args.toList())
 
-    fun call(args: List<*>) {
+    fun call(args: List<*>)
+    {
         encoder.write(output, args)
         output.flush()
 
@@ -136,36 +139,12 @@ class RedisConnection(
 
     fun subscribe(subscriber: Subscriber, vararg channel: String)
     {
-        val handled = hashMapOf<String, Int>()
+        this.dataStream.subscribe(this, subscriber, *channel)
+    }
 
-        while (true)
-        {
-            val result = callReturnRead<List<*>>("SUBSCRIBE", *channel)
-                ?: continue
-
-            for (entries in result.withIndex())
-            {
-                val entry = entries.value
-
-                if (entry != null && entry is ByteArray)
-                {
-                    val content = entry.decodeToString()
-
-                    if (handled.containsKey(content) && handled[content] == entries.index)
-                    {
-                        continue
-                    }
-
-                    for (string in channel)
-                    {
-                        subscriber.handleIncoming(string, content)
-                    }
-
-                    // TODO: 3/10/2022 better solution for this, not entirely sure how this works.
-                    handled[content] = entries.index
-                }
-            }
-        }
+    fun pSubscribe(subscriber: Subscriber, vararg pattern: String)
+    {
+        this.dataStream.pSubscribe(this, subscriber, *pattern)
     }
 
     fun subscribe(vararg channel: String, subscriber: (message: String) -> Unit)
@@ -179,6 +158,20 @@ class RedisConnection(
                 }
             },
             channel = channel
+        )
+    }
+
+    fun pSubscribe(vararg pattern: String, subscriber: (message: String) -> Unit)
+    {
+        this.pSubscribe(
+            subscriber = object : Subscriber
+            {
+                override fun handleIncoming(channel: String, message: String)
+                {
+                    subscriber.invoke(message)
+                }
+            },
+            pattern = pattern
         )
     }
 
