@@ -22,14 +22,28 @@ class RedisConnection(
         this.output = socket.getOutputStream()
     }
 
-    inline fun <reified T : Any> call(vararg args: Any): T? = call(T::class.java, args)
+    inline fun <reified T : Any> callReturnRead(vararg args: Any): T? = callReturnRead(args.toList())
+    inline fun <reified T : Any> callReturnRead(args: List<*>): T? = callReturnRead(T::class.java, args)
 
-    fun <T : Any> call(type: Class<T>, vararg args: Any): T?
-    {
-        encoder.write(output, args.toList())
+    fun <T : Any> callReturnRead(type: Class<T>, vararg args: Any): T? = callReturnRead(type, args.toList())
+
+    fun call(vararg args: Any) = call(args.toList())
+
+    fun call(args: List<*>) {
+        for (arg in args)
+        {
+            println(arg?.javaClass?.name ?: "")
+        }
+
+        encoder.write(output, args)
         output.flush()
 
-        return this.read(type)
+        this.read(ByteArray::class.java) // even though we're not returning this, we're still reading to clear the buffer!
+    }
+
+    fun <T : Any> callReturnRead(type: Class<T>, args: List<*>): T?
+    {
+        call(args); return this.read(type)
     }
 
     fun set(key: String, value: Any)
@@ -42,7 +56,7 @@ class RedisConnection(
 
     fun <T : Any> get(key: String, type: Class<T>): T?
     {
-        return call(type, "GET", key)
+        return callReturnRead(type, "GET", key)
     }
 
     fun get(key: String): ByteArray?
@@ -97,19 +111,19 @@ class RedisConnection(
 
     fun <T : Any> hget(hash: String, key: String, type: Class<T>): T?
     {
-        return call(type, "HGET", hash, key)
+        return callReturnRead(type, "HGET", hash, key)
     }
 
     fun hdel(hash: String, key: String)
     {
-        call<ByteArray>("HDEL", hash, key)
+        call("HDEL", hash, key)
     }
 
     inline fun <reified T : Any> hgetAll(hash: String): List<T?> = hgetAll(hash, T::class.java)
 
     fun <T : Any> hgetAll(hash: String, type: Class<T>): List<T?>
     {
-        val call = call<List<ByteArray>>("HGETALL", hash) ?: return emptyList()
+        val call = callReturnRead<List<ByteArray>>("HGETALL", hash) ?: return emptyList()
 
         return call.map {
             val converter = Converters.retrieveConverter(type)
@@ -126,7 +140,7 @@ class RedisConnection(
 
     fun publish(channel: String, message: String)
     {
-        call<ByteArray>("PUBLISH", channel, message)
+        call("PUBLISH", channel, message)
     }
 
     fun subscribe(subscriber: Subscriber, vararg channel: String)
@@ -135,7 +149,7 @@ class RedisConnection(
 
         while (true)
         {
-            val result = call<List<*>>("SUBSCRIBE", *channel)
+            val result = callReturnRead<List<*>>("SUBSCRIBE", *channel)
                 ?: continue
 
             for (entries in result.withIndex())
