@@ -15,17 +15,17 @@ other JVM-based languages, such as [Java](https://www.java.com/en/), [Scala](htt
 
 # Documentation
 * [GitHub Wiki](https://github.com/devrawr/rekt/wiki)
- * Build Tools
-   * [gradle](https://github.com/devrawr/rekt/wiki/gradle) - Recommended build tool, rekt is built using the `Groovy DSL`.
-   * [maven](https://github.com/devrawr/rekt/wiki/gradle)
+  * Build Tools
+    * [gradle](https://github.com/devrawr/rekt/wiki/gradle) - Recommended build tool, rekt is built using the `Groovy DSL`.
+    * [maven](https://github.com/devrawr/rekt/wiki/gradle)
 
- * General
-   * [Creating a connection to Redis](https://github.com/devrawr/rekt/wiki/connections)
+  * General
+    * [Creating a connection to Redis](https://github.com/devrawr/rekt/wiki/connections)
 
- * Caching Data
-   * [hset, hget](https://github.com/devrawr/rekt/wiki/hashset)
-   * [set, get](https://github.com/devrawr/rekt/wiki/setget)
+  * Caching Data
+    * [hset, hget](https://github.com/devrawr/rekt/wiki/hashset)
+    * [set, get](https://github.com/devrawr/rekt/wiki/setget)
 
- * Pub/Sub
-   * [publishing](https://github.com/devrawr/rekt/wiki/hashset)
-   * [subscribing](https://github.com/devrawr/rekt/wiki/subscribing)
+  * Pub/Sub
+    * [publishing](https://github.com/devrawr/rekt/wiki/hashset)
+    * [subscribing](https://github.com/devrawr/rekt/wiki/subscribing)
