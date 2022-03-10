@@ -58,31 +58,8 @@ object Redis
         }
     }
 
-    @JvmOverloads
-    fun create(
-        socket: Socket,
-        decoder: Decoder = this.decoder,
-        encoder: Encoder = this.encoder,
-        dataStream: DataStream = this.dataStream
-    ): RedisConnection
+    fun builder(): RedisConnectionBuilder
     {
-        return RedisConnection(socket, dataStream, decoder, encoder)
-    }
-
-    @JvmOverloads
-    fun create(
-        hostname: String = "127.0.0.1",
-        port: Int = 6379,
-        decoder: Decoder = this.decoder,
-        encoder: Encoder = this.encoder,
-        dataStream: DataStream = this.dataStream
-    ): RedisConnection
-    {
-        return this.create(
-            socket = Socket(hostname, port),
-            decoder = decoder,
-            encoder = encoder,
-            dataStream = dataStream
-        )
+        return RedisConnectionBuilder()
     }
 }

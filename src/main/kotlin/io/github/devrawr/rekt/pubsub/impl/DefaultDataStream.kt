@@ -8,12 +8,22 @@ object DefaultDataStream : DataStream
 {
     override fun subscribe(connection: RedisConnection, subscriber: Subscriber, vararg channel: String)
     {
-        this.globalSubscribeMethod("SUBSCRIBE", connection, subscriber, *channel)
+        this.globalSubscribeMethod(
+            "SUBSCRIBE",
+            connection,
+            subscriber,
+            *channel
+        )
     }
 
     override fun pSubscribe(connection: RedisConnection, subscriber: Subscriber, vararg pattern: String)
     {
-        this.globalSubscribeMethod("PSUBSCRIBE", connection, subscriber, *pattern)
+        this.globalSubscribeMethod(
+            "PSUBSCRIBE",
+            connection,
+            subscriber,
+            *pattern
+        )
     }
 
     fun globalSubscribeMethod(type: String, connection: RedisConnection, subscriber: Subscriber, vararg pattern: String)

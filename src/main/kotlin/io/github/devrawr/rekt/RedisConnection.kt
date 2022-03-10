@@ -6,24 +6,15 @@ import io.github.devrawr.rekt.decoding.Decoder
 import io.github.devrawr.rekt.pubsub.Subscriber
 import io.github.devrawr.rekt.pubsub.DataStream
 import java.io.*
-import java.net.Socket
 
 class RedisConnection(
-    socket: Socket,
+    private val input: InputStream,
+    private val output: OutputStream,
     private val dataStream: DataStream,
     private val decoder: Decoder,
     private val encoder: Encoder
 )
 {
-    private val input: InputStream
-    private val output: OutputStream
-
-    init
-    {
-        this.input = socket.getInputStream()
-        this.output = socket.getOutputStream()
-    }
-
     @JvmName("hgetInline")
     inline fun <reified T : Any> hget(key: String): T? = hget(key, T::class.java)
 

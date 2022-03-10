@@ -36,9 +36,9 @@ object DefaultRedisEncoder : Encoder
         write(stream, value.toString())
 
         // doesn't work - java.net.SocketException: Broken pipe (Write failed) on next call.
-//        stream.write(INTEGER)
-//        stream.write(value.toString().encodeToByteArray())
-//        stream.write(CRLF)
+        //stream.write(INTEGER)
+        //stream.write(value.toString().encodeToByteArray())
+        //stream.write(CRLF)
     }
 
     override fun write(stream: OutputStream, value: List<*>)
