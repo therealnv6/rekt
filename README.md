@@ -37,3 +37,6 @@ other JVM-based languages, such as [Java](https://www.java.com/en/), [Scala](htt
   * Pub/Sub
     * [publishing](https://github.com/devrawr/rekt/wiki/hashset)
     * [subscribing](https://github.com/devrawr/rekt/wiki/subscribing)
+
+# Note
+Usage is still actively being changed. Versions are (most likely) not backwards compatible nor forwards compatible.
