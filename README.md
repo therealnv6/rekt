@@ -4,13 +4,12 @@ other JVM-based languages, such as [Java](https://www.java.com/en/), [Scala](htt
 
 `rekt` doesn't aim to have the most features possible - it aims to do what a redis client is **supposed to do**: handle redis messaging.
 
-# Why use REKT
+# Why use REKT instead of X/Y redis API
 * You probably **should not** if you're working on a production server, REKT is still unstable and in heavy development, however we do have some benefits over other libraries:
-  * Lightweight, not-bloated
-    * REKT does what it has to do - handle redis messaging, nothing else.
+  * Lightweight, not-bloated: REKT does what it has to do - handle redis messaging, nothing else.
   * Despite being lightweight, it still has an easy-to-use API, primarily focusing on making the life of kotlin developers easier.
   * It's less than `2000` lines of code (including README)! Whereas, for example [jedis](https://github.com/redis/jedis) has `92000` lines of code, and [lettuce-core](https://github.com/lettuce-io/lettuce-core) has a whopping `215000` lines of code!
-
+  
 # Features
 * Basic in-memory cache (`HSET`, `SET`, `HGET`, `GET`, `HGETALL`, etc.)
 * Able to call whatever redis command you want through `RedisConnection#call(vararg Any)`
