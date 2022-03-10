@@ -7,7 +7,7 @@ other JVM-based languages, such as [Java](https://www.java.com/en/), [Scala](htt
   * Lightweight, not-bloated
     * REKT does what it has to do - handle redis messaging, nothing else.
   * Despite being lightweight, it still has an easy-to-use API, primarily focusing on making the life of kotlin developers easier.
-  * It's less than `2000` lines of code! Whereas, for example [jedis](https://github.com/redis/jedis) has `92000` lines of code, and [lettuce-core](https://github.com/lettuce-io/lettuce-core) has a whopping `215000` lines of code!
+  * It's less than `1000` lines of code (including README)! Whereas, for example [jedis](https://github.com/redis/jedis) has `92000` lines of code, and [lettuce-core](https://github.com/lettuce-io/lettuce-core) has a whopping `215000` lines of code!
 
 # Communication
 * [Personal Discord Server](https://discord.gg/Jx6sHxzF55) (#rekt-support channel)
