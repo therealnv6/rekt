@@ -18,6 +18,7 @@ other JVM-based languages, such as [Java](https://www.java.com/en/), [Scala](htt
 # Communication
 * [Personal Discord Server](https://discord.gg/Jx6sHxzF55) (#rekt-support channel)
 * [GitHub Discussions](https://github.com/devrawr/rekt/discussions)
+* [GitHub Issues](https://github.com/devrawr/rekt/issues)
 
 # Documentation
 * [GitHub Wiki](https://github.com/devrawr/rekt/wiki)
