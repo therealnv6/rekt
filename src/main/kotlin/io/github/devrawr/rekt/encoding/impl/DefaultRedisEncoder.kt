@@ -32,8 +32,18 @@ object DefaultRedisEncoder : Encoder
 
     override fun write(stream: OutputStream, value: Long)
     {
-        // TODO: 3/10/2022 fix long writing, temporarily just writing as string.
+        // TODO: 3/10/2022 fix RESP integer writing. temporarily just writing as bulk string.
         write(stream, value.toString())
+
+        // doesn't work
+//        stream.write(INTEGER)
+//        stream.write(
+//            ByteBuffer.allocate(java.lang.Long.BYTES)
+//                .putLong(value)
+//                .array()
+//        )
+//
+//        stream.write(CRLF)
     }
 
     override fun write(stream: OutputStream, value: List<*>)

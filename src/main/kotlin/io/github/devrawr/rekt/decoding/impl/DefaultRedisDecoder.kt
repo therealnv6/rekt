@@ -10,11 +10,16 @@ object DefaultRedisDecoder : Decoder
 {
     override fun decode(stream: InputStream): Any?
     {
+        if (stream.available() <= 0)
+        {
+            return null
+        }
+
         return when (stream.read())
         {
             STRING -> readString(stream)
             ERROR -> throw ServerError(readString(stream), Error(""))
-            INTEGER -> readString(stream).toLong()
+            INTEGER -> readString(stream).toLongOrNull()
             ARRAY ->
             {
                 val length = readString(stream).toLongOrNull()
@@ -62,8 +67,9 @@ object DefaultRedisDecoder : Decoder
 
     override fun readString(stream: InputStream): String
     {
+        var size = 1024
         var index = 0
-        val buffer = ByteArray(1024)
+        var buffer = ByteArray(size)
 
         var char: Char?
 
@@ -77,6 +83,12 @@ object DefaultRedisDecoder : Decoder
             }
 
             buffer[index++] = char.code.toByte()
+
+            if (index == size)
+            {
+                size *= 2
+                buffer = buffer.copyOf(size * 2)
+            }
         }
 
         if (stream.read() != '\n'.code)

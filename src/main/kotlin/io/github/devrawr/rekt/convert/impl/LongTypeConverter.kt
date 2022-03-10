@@ -5,14 +5,19 @@ import java.nio.ByteBuffer
 
 object LongTypeConverter : TypeConverter<Long>
 {
-    override fun convert(data: ByteArray): Long
+    override fun convert(data: ByteArray?): Long?
     {
+        if (data == null)
+        {
+            return null
+        }
+
         return try
         {
             ByteBuffer.wrap(data).long
         } catch (ignored: Exception)
         {
-            data.decodeToString().toLong()
+            data.decodeToString().toLongOrNull()
         }
     }
 }

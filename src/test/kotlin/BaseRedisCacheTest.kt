@@ -17,4 +17,14 @@ class BaseRedisCacheTest
         assertEquals(40, pool.hget<Long>("fuck", "dir"))
         assertEquals("hello", pool.hget("fuck", "fir"))
     }
+
+    @Test
+    fun pubSubTest()
+    {
+        val pool = Redis.createConnection()
+
+        pool.subscribe("test") {
+            println(it)
+        }
+    }
 }

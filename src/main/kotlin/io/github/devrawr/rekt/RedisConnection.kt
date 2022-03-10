@@ -3,6 +3,7 @@ package io.github.devrawr.rekt
 import io.github.devrawr.rekt.convert.Converters
 import io.github.devrawr.rekt.encoding.Encoder
 import io.github.devrawr.rekt.decoding.Decoder
+import io.github.devrawr.rekt.pubsub.Subscriber
 import java.io.*
 import java.net.Socket
 
@@ -21,7 +22,7 @@ class RedisConnection(
         this.output = socket.getOutputStream()
     }
 
-    fun <T> call(vararg args: Any): T
+    fun <T> call(vararg args: Any): T?
     {
         encoder.write(output, args.toList())
         output.flush()
@@ -35,9 +36,9 @@ class RedisConnection(
     }
 
     @JvmName("getInline")
-    inline fun <reified T> get(key: String): T = get(key, T::class.java)
+    inline fun <reified T : Any> get(key: String): T = get(key, T::class.java)
 
-    fun <T> get(key: String, type: Class<T>): T
+    fun <T : Any> get(key: String, type: Class<T>): T
     {
         val call = call<ByteArray>("GET", key)
         val converter = Converters.retrieveConverter(type)
@@ -62,9 +63,9 @@ class RedisConnection(
     }
 
     @JvmName("hgetInline")
-    inline fun <reified T> hget(hash: String, key: String) = hget(hash, key, T::class.java)
+    inline fun <reified T : Any> hget(hash: String, key: String) = hget(hash, key, T::class.java)
 
-    fun <T> hget(hash: String, key: String, type: Class<T>): T
+    fun <T : Any> hget(hash: String, key: String, type: Class<T>): T?
     {
         val call = call<ByteArray>("HGET", hash, key)
         val converter = Converters.retrieveConverter(type)
@@ -74,7 +75,7 @@ class RedisConnection(
             call as T
         } else
         {
-            converter.convert(call)!!
+            converter.convert(call)
         }
     }
 
@@ -83,9 +84,11 @@ class RedisConnection(
         call<ByteArray>("HDEL", hash, key)
     }
 
-    fun <T> hgetAll(hash: String, type: Class<T>): List<T>
+    inline fun <reified T : Any> hgetAll(hash: String): List<T> = hgetAll(hash, T::class.java)
+
+    fun <T : Any> hgetAll(hash: String, type: Class<T>): List<T>
     {
-        val call = call<List<ByteArray>>("HGETALL", hash)
+        val call = call<List<ByteArray>>("HGETALL", hash) ?: return emptyList()
 
         return call.map {
             val converter = Converters.retrieveConverter(type)
@@ -100,8 +103,69 @@ class RedisConnection(
         }
     }
 
-    fun <T> read(): T
+    fun publish(channel: String, message: String)
     {
-        return decoder.decode(input) as T
+        call<ByteArray>("PUBLISH", channel, message)
+    }
+
+    fun subscribe(subscriber: Subscriber, vararg channel: String)
+    {
+        val handled = hashMapOf<String, Int>()
+
+        while (true)
+        {
+            val result = call<List<*>>("SUBSCRIBE", *channel)
+                ?: continue
+
+            for (entries in result.withIndex())
+            {
+                val entry = entries.value
+
+                if (entry != null && entry is ByteArray)
+                {
+                    val content = entry.decodeToString()
+
+                    if (handled.containsKey(content) && handled[content] == entries.index)
+                    {
+                        continue
+                    }
+
+                    for (string in channel)
+                    {
+                        subscriber.handleIncoming(string, content)
+                    }
+
+                    // TODO: 3/10/2022 better solution for this, not entirely sure how this works.
+                    handled[content] = entries.index
+                }
+            }
+        }
+    }
+
+    fun subscribe(subscriber: (channel: String, message: String) -> Unit, vararg channel: String)
+    {
+        subscribe(
+            subscriber = object : Subscriber
+            {
+                override fun handleIncoming(channel: String, message: String)
+                {
+                    subscriber.invoke(channel, message)
+                }
+            },
+            channel = channel
+        )
+    }
+
+    fun subscribe(vararg channel: String, subscriber: (message: String) -> Unit, )
+    {
+        subscribe(
+            subscriber = { _, message -> subscriber.invoke(message) },
+            channel = channel
+        )
+    }
+
+    fun <T> read(): T?
+    {
+        return decoder.decode(input) as T?
     }
 }

@@ -4,8 +4,8 @@ import io.github.devrawr.rekt.convert.TypeConverter
 
 object StringTypeConverter : TypeConverter<String>
 {
-    override fun convert(data: ByteArray): String
+    override fun convert(data: ByteArray?): String?
     {
-        return data.decodeToString()
+        return data?.decodeToString()
     }
 }
