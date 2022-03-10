@@ -22,45 +22,37 @@ class RedisConnection(
         this.output = socket.getOutputStream()
     }
 
-    fun <T> call(vararg args: Any): T?
+    inline fun <reified T : Any> call(vararg args: Any): T? = call(T::class.java, args)
+
+    fun <T : Any> call(type: Class<T>, vararg args: Any): T?
     {
         encoder.write(output, args.toList())
-        Thread.sleep(0, 1) // ??? doesn't work without this. someone, help?
         output.flush()
 
-        return this.read()
+        return this.read(type)
     }
 
     fun set(key: String, value: Any)
     {
-        call<ByteArray>("SET", key, value)
+        call(ByteArray::class.java, "SET", key, value)
     }
 
     @JvmName("getInline")
-    inline fun <reified T : Any> get(key: String): T = get(key, T::class.java)
+    inline fun <reified T : Any> get(key: String): T? = get(key, T::class.java)
 
-    fun <T : Any> get(key: String, type: Class<T>): T
+    fun <T : Any> get(key: String, type: Class<T>): T?
     {
-        val call = call<ByteArray>("GET", key)
-        val converter = Converters.retrieveConverter(type)
-
-        return if (converter == null)
-        {
-            call as T
-        } else
-        {
-            converter.convert(call)!!
-        }
+        return call(type, "GET", key)
     }
 
-    fun get(key: String): ByteArray
+    fun get(key: String): ByteArray?
     {
         return get<ByteArray>(key)
     }
 
     fun hset(hash: String, key: String, value: Any)
     {
-        call<ByteArray>("HSET", hash, key, value)
+        call(ByteArray::class.java, "HSET", hash, key, value)
     }
 
     fun hset(key: String, value: Any)
@@ -105,16 +97,7 @@ class RedisConnection(
 
     fun <T : Any> hget(hash: String, key: String, type: Class<T>): T?
     {
-        val call = call<ByteArray>("HGET", hash, key)
-        val converter = Converters.retrieveConverter(type)
-
-        return if (converter == null)
-        {
-            call as T
-        } else
-        {
-            converter.convert(call)
-        }
+        return call(type, "HGET", hash, key)
     }
 
     fun hdel(hash: String, key: String)
@@ -122,9 +105,9 @@ class RedisConnection(
         call<ByteArray>("HDEL", hash, key)
     }
 
-    inline fun <reified T : Any> hgetAll(hash: String): List<T> = hgetAll(hash, T::class.java)
+    inline fun <reified T : Any> hgetAll(hash: String): List<T?> = hgetAll(hash, T::class.java)
 
-    fun <T : Any> hgetAll(hash: String, type: Class<T>): List<T>
+    fun <T : Any> hgetAll(hash: String, type: Class<T>): List<T?>
     {
         val call = call<List<ByteArray>>("HGETALL", hash) ?: return emptyList()
 
@@ -204,8 +187,32 @@ class RedisConnection(
         )
     }
 
-    fun <T> read(): T?
+    private fun <T : Any> read(type: Class<T>): T?
     {
-        return decoder.decode(input) as T?
+        val converter = Converters.retrieveConverter(type)
+        val decoded = decoder.decode(input)
+            ?: return null
+
+        val converted = try
+        {
+            decoded as T
+        } catch (ignored: java.lang.ClassCastException)
+        {
+            decoded as ByteArray
+        }
+
+        return if (converted is ByteArray)
+        {
+            if (converter == null)
+            {
+                converted as T
+            } else
+            {
+                converter.convert(converted)
+            }
+        } else
+        {
+            converted as T?
+        }
     }
 }

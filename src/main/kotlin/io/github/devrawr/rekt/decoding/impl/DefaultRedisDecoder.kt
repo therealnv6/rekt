@@ -15,14 +15,17 @@ object DefaultRedisDecoder : Decoder
             return null
         }
 
+        println("no exception thrown! decode()")
+
         return when (stream.read())
         {
-            STRING -> readString(stream)
-            ERROR -> throw ServerError(readString(stream), Error(""))
-            INTEGER -> readString(stream).toLongOrNull()
+            STRING, INTEGER -> readString(stream)
+            ERROR -> throw ServerError(readString(stream).decodeToString(), Error(""))
             ARRAY ->
             {
-                val length = readString(stream).toLongOrNull()
+                val length = readString(stream)
+                    .decodeToString()
+                    .toLongOrNull()
 
                 return if (length == null || length == -1L)
                 {
@@ -36,7 +39,9 @@ object DefaultRedisDecoder : Decoder
             }
             BULK_STRING ->
             {
-                val length = readString(stream).toIntOrNull()
+                val length = readString(stream)
+                    .decodeToString()
+                    .toIntOrNull()
 
                 if (length == null // failed to parse the number, probably a wrongly formatted string, or length is higher than the 32-bit integer limit
                     || length == -1 // Null Bulk String
@@ -65,7 +70,7 @@ object DefaultRedisDecoder : Decoder
         }
     }
 
-    override fun readString(stream: InputStream): String
+    override fun readString(stream: InputStream): ByteArray
     {
         var size = 1024
         var index = 0
@@ -96,6 +101,7 @@ object DefaultRedisDecoder : Decoder
             throw ByteLayoutException("CRLF scheme is not formatted properly!")
         }
 
-        return buffer.copyOfRange(0, index).decodeToString()
+        return buffer
+            .copyOfRange(0, index)
     }
 }

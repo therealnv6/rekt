@@ -7,6 +7,7 @@ class BaseRedisCacheTest
     @Test
     fun createPool()
     {
+        println("ayo!!")
         val pool = Redis.create()
 
         pool.hset("fuck", "dir", "40")
@@ -18,16 +19,6 @@ class BaseRedisCacheTest
             pool.hget<Long>("fuck", "dir"), // saved as string, read as long
             pool.hget<String>("fuck", "fir") // saved as string, read as string
         ).forEach {
-            println(it)
-        }
-    }
-
-    @Test
-    fun pubSubTest()
-    {
-        val pool = Redis.create()
-
-        pool.subscribe("test") {
             println(it)
         }
     }

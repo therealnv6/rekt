@@ -32,5 +32,5 @@ interface Decoder
      * @return the bytes until the next CR
      * @throws IOException inherited from underlying stream
      */
-    fun readString(stream: InputStream): String
+    fun readString(stream: InputStream): ByteArray
 }
