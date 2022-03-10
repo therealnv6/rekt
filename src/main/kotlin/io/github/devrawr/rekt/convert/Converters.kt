@@ -1,5 +1,6 @@
 package io.github.devrawr.rekt.convert
 
+import io.github.devrawr.rekt.convert.impl.IntTypeConverter
 import io.github.devrawr.rekt.convert.impl.LongTypeConverter
 import io.github.devrawr.rekt.convert.impl.StringTypeConverter
 
@@ -7,7 +8,8 @@ object Converters
 {
     private val converters = hashMapOf<Class<*>, TypeConverter<*>>(
         String::class.java to StringTypeConverter,
-        Long::class.java to LongTypeConverter
+        Long::class.java to LongTypeConverter,
+        Int::class.java to IntTypeConverter
     )
 
     inline fun <reified T : Any> retrieveConverter(): TypeConverter<T>? = retrieveConverter(T::class.java)

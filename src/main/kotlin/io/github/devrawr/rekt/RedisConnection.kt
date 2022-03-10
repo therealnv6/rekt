@@ -90,7 +90,7 @@ class RedisConnection(
     @JvmName("hgetInline")
     inline fun <reified T : Any> hget(hash: String, key: String) = hget(hash, key, T::class.java)
 
-    fun <T : Any> hget(key: String, type: Class<T>) : T?
+    fun <T : Any> hget(key: String, type: Class<T>): T?
     {
         val split = key.split("/")
 
@@ -196,7 +196,9 @@ class RedisConnection(
     fun subscribe(vararg channel: String, subscriber: (message: String) -> Unit)
     {
         subscribe(
-            subscriber = { _, message -> subscriber.invoke(message) },
+            subscriber = { _, message ->
+                subscriber.invoke(message)
+            },
             channel = channel
         )
     }

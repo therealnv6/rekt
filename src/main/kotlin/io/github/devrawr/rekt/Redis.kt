@@ -66,6 +66,7 @@ object Redis
         }
     }
 
+    @JvmOverloads
     fun create(
         socket: Socket,
         decoder: Decoder = this.decoder,
@@ -75,6 +76,7 @@ object Redis
         return RedisConnection(socket, decoder, encoder)
     }
 
+    @JvmOverloads
     fun create(
         hostname: String = "127.0.0.1",
         port: Int = 6379,
