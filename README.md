@@ -9,6 +9,23 @@ other JVM-based languages, such as [Java](https://www.java.com/en/), [Scala](htt
   * Despite being lightweight, it still has an easy-to-use API, primarily focusing on making the life of kotlin developers easier.
   * It's less than `2000` lines of code! Whereas, for example [jedis](https://github.com/redis/jedis) has `92000` lines of code, and [lettuce-core](https://github.com/lettuce-io/lettuce-core) has a whopping `215000` lines of code!
 
-# Wiki
-Our wiki is currently located on the [github repository](https://github.com/devrawr/rekt/wiki), feel free to visit it for any information
-regarding the usage of our API.
+# Communication
+* [Personal Discord Server](https://discord.gg/Jx6sHxzF55) (#rekt-support channel)
+* [GitHub Discussions](https://github.com/devrawr/rekt/discussions)
+
+# Documentation
+* [GitHub Wiki](https://github.com/devrawr/rekt/wiki)
+ * Build Tools
+   * [gradle](https://github.com/devrawr/rekt/wiki/gradle) - Recommended build tool, rekt is built using the `Groovy DSL`.
+   * [maven](https://github.com/devrawr/rekt/wiki/gradle)
+
+ * General
+   * [Creating a connection to Redis](https://github.com/devrawr/rekt/wiki/connections)
+
+ * Caching Data
+   * [hset, hget](https://github.com/devrawr/rekt/wiki/hashset)
+   * [set, get](https://github.com/devrawr/rekt/wiki/setget)
+
+ * Pub/Sub
+   * [publishing](https://github.com/devrawr/rekt/wiki/hashset)
+   * [subscribing](https://github.com/devrawr/rekt/wiki/subscribing)
