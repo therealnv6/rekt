@@ -7,7 +7,7 @@ import java.lang.reflect.Type
 
 object Converters
 {
-    val converters = hashMapOf<Class<*>, TypeConverter<*>>(
+    private val converters = hashMapOf<Class<*>, TypeConverter<*>>(
         String::class.java to StringTypeConverter,
         Long::class.java to LongTypeConverter,
         Int::class.java to IntTypeConverter
@@ -26,16 +26,27 @@ object Converters
         }] as TypeConverter<T>?
     }
 
-    inline fun <reified T : Any> createConverter(noinline convert: (ByteArray?) -> T?): TypeConverter<T>
+    inline fun <reified T : Any> createConverter(noinline convert: (ByteArray?) -> T?): TypeConverter<T> =
+        createConverter(T::class.java, convert)
+
+    fun <T : Any> createConverter(type: Class<T>, convert: (ByteArray?) -> T?): TypeConverter<T>
     {
-        return object : TypeConverter<T>
-        {
-            override fun convert(data: ByteArray?): T?
+        return registerConverter(
+            type,
+            object : TypeConverter<T>
             {
-                return convert.invoke(data)
+                override fun convert(data: ByteArray?): T?
+                {
+                    return convert.invoke(data)
+                }
             }
-        }.apply {
-            converters[T::class.java] = this
+        )
+    }
+
+    fun <T : Any> registerConverter(type: Class<T>, converter: TypeConverter<T>): TypeConverter<T>
+    {
+        return converter.apply {
+            converters[type] = this
         }
     }
 }
