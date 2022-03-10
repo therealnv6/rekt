@@ -22,6 +22,17 @@ class RedisConnection(
         this.output = socket.getOutputStream()
     }
 
+    @JvmName("hgetInline")
+    inline fun <reified T : Any> hget(key: String): T? = hget(key, T::class.java)
+
+    @JvmName("hgetInline")
+    inline fun <reified T : Any> hget(hash: String, key: String) = hget(hash, key, T::class.java)
+
+    @JvmName("getInline")
+    inline fun <reified T : Any> get(key: String): T? = get(key, T::class.java)
+
+    inline fun <reified T : Any> hgetAll(hash: String): List<T?> = hgetAll(hash, T::class.java)
+
     inline fun <reified T : Any> callReturnRead(vararg args: Any): T? = callReturnRead(args.toList())
     inline fun <reified T : Any> callReturnRead(args: List<*>): T? = callReturnRead(T::class.java, args)
 
@@ -51,9 +62,6 @@ class RedisConnection(
         call(ByteArray::class.java, "SET", key, value)
     }
 
-    @JvmName("getInline")
-    inline fun <reified T : Any> get(key: String): T? = get(key, T::class.java)
-
     fun <T : Any> get(key: String, type: Class<T>): T?
     {
         return callReturnRead(type, "GET", key)
@@ -81,22 +89,6 @@ class RedisConnection(
         hset(split[0], split[1], value)
     }
 
-    @JvmName("hgetInline")
-    inline fun <reified T : Any> hget(key: String): T?
-    {
-        val split = key.split("/")
-
-        if (split.size != 2)
-        {
-            throw IllegalArgumentException("Provided key is $key, must be formatted like 'hash/key'")
-        }
-
-        return hget(split[0], split[1])
-    }
-
-    @JvmName("hgetInline")
-    inline fun <reified T : Any> hget(hash: String, key: String) = hget(hash, key, T::class.java)
-
     fun <T : Any> hget(key: String, type: Class<T>): T?
     {
         val split = key.split("/")
@@ -118,8 +110,6 @@ class RedisConnection(
     {
         call("HDEL", hash, key)
     }
-
-    inline fun <reified T : Any> hgetAll(hash: String): List<T?> = hgetAll(hash, T::class.java)
 
     fun <T : Any> hgetAll(hash: String, type: Class<T>): List<T?>
     {
