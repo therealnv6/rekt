@@ -12,7 +12,6 @@ class BaseRedisCacheTest
         pool.hset("fuck", "fir", "hello")
         pool.hset("fuck", "sir", 39)
 
-        Thread.sleep(500)
 
         listOf(
             pool.hget<Long>("fuck", "sir"), // saved as int, read as long

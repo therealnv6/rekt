@@ -41,11 +41,6 @@ class RedisConnection(
     fun call(vararg args: Any) = call(args.toList())
 
     fun call(args: List<*>) {
-        for (arg in args)
-        {
-            println(arg?.javaClass?.name ?: "")
-        }
-
         encoder.write(output, args)
         output.flush()
 
@@ -54,7 +49,13 @@ class RedisConnection(
 
     fun <T : Any> callReturnRead(type: Class<T>, args: List<*>): T?
     {
-        call(args); return this.read(type)
+        // don't call this.call(List<*>), we want to handle this.read() on our own,
+        // but because call(List<*>) already calls this.read(), the buffer will be cleared,
+        // causing us to not receive any data.
+        encoder.write(output, args)
+        output.flush()
+
+        return this.read(type)
     }
 
     fun set(key: String, value: Any)
@@ -74,7 +75,7 @@ class RedisConnection(
 
     fun hset(hash: String, key: String, value: Any)
     {
-        call(ByteArray::class.java, "HSET", hash, key, value)
+        call("HSET", hash, key, value)
     }
 
     fun hset(key: String, value: Any)
@@ -167,25 +168,15 @@ class RedisConnection(
         }
     }
 
-    fun subscribe(subscriber: (channel: String, message: String) -> Unit, vararg channel: String)
+    fun subscribe(vararg channel: String, subscriber: (message: String) -> Unit)
     {
         subscribe(
             subscriber = object : Subscriber
             {
                 override fun handleIncoming(channel: String, message: String)
                 {
-                    subscriber.invoke(channel, message)
+                    subscriber.invoke(message)
                 }
-            },
-            channel = channel
-        )
-    }
-
-    fun subscribe(vararg channel: String, subscriber: (message: String) -> Unit)
-    {
-        subscribe(
-            subscriber = { _, message ->
-                subscriber.invoke(message)
             },
             channel = channel
         )

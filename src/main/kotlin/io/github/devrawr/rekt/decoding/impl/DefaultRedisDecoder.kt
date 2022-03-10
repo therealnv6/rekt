@@ -17,9 +17,7 @@ object DefaultRedisDecoder : Decoder
 
         return when (stream.read())
         {
-            STRING -> readString(stream)
-            INTEGER -> readString(stream)
-            ERROR -> throw ServerError(readString(stream).decodeToString(), Error(""))
+            STRING, INTEGER -> readString(stream)
             ARRAY ->
             {
                 val length = readString(stream)
@@ -65,6 +63,7 @@ object DefaultRedisDecoder : Decoder
                 return buffer
             }
 
+            ERROR -> throw Exception(readString(stream).decodeToString(), Error(""))
             else -> null
         }
     }
