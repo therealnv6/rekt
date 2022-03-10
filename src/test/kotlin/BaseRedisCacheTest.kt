@@ -1,18 +1,18 @@
 import io.github.devrawr.rekt.Redis
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
 
 class BaseRedisCacheTest
 {
     @Test
     fun createPool()
     {
-        println("ayo!!")
         val pool = Redis.create()
 
         pool.hset("fuck", "dir", "40")
         pool.hset("fuck", "fir", "hello")
         pool.hset("fuck", "sir", 39)
+
+        Thread.sleep(500)
 
         listOf(
             pool.hget<Long>("fuck", "sir"), // saved as int, read as long

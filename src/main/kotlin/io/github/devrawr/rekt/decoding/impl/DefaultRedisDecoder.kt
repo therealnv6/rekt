@@ -10,16 +10,15 @@ object DefaultRedisDecoder : Decoder
 {
     override fun decode(stream: InputStream): Any?
     {
-        if (stream.available() <= 0)
+        if (stream.available() < 0)
         {
             return null
         }
 
-        println("no exception thrown! decode()")
-
         return when (stream.read())
         {
-            STRING, INTEGER -> readString(stream)
+            STRING -> readString(stream)
+            INTEGER -> readString(stream)
             ERROR -> throw ServerError(readString(stream).decodeToString(), Error(""))
             ARRAY ->
             {
