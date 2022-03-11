@@ -34,11 +34,6 @@ object DefaultRedisEncoder : Encoder
     {
         // TODO: 3/10/2022 fix RESP integer writing. temporarily just writing as bulk string.
         write(stream, value.toString())
-
-        // doesn't work - java.net.SocketException: Broken pipe (Write failed) on next call.
-        //stream.write(INTEGER)
-        //stream.write(value.toString().encodeToByteArray())
-        //stream.write(CRLF)
     }
 
     override fun write(stream: OutputStream, value: List<*>)

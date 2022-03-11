@@ -1,8 +1,8 @@
 package io.github.devrawr.rekt.pubsub.impl
 
 import io.github.devrawr.rekt.RedisConnection
-import io.github.devrawr.rekt.pubsub.Subscriber
 import io.github.devrawr.rekt.pubsub.DataStream
+import io.github.devrawr.rekt.pubsub.Subscriber
 
 object DefaultDataStream : DataStream
 {

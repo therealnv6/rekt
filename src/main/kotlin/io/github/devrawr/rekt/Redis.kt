@@ -1,9 +1,9 @@
 package io.github.devrawr.rekt
 
-import io.github.devrawr.rekt.encoding.Encoder
-import io.github.devrawr.rekt.encoding.impl.DefaultRedisEncoder
 import io.github.devrawr.rekt.decoding.Decoder
 import io.github.devrawr.rekt.decoding.impl.DefaultRedisDecoder
+import io.github.devrawr.rekt.encoding.Encoder
+import io.github.devrawr.rekt.encoding.impl.DefaultRedisEncoder
 import io.github.devrawr.rekt.pubsub.DataStream
 import io.github.devrawr.rekt.pubsub.impl.DefaultDataStream
 import io.github.devrawr.rekt.util.ClassReflectionUtil.getOrCreateInstance

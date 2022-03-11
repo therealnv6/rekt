@@ -59,14 +59,21 @@ class RedisConnectionBuilder
         }
     }
 
+    fun socketOf(hostname: String, port: Int): RedisConnectionBuilder
+    {
+        return this.socketOf(
+            Socket(
+                hostname,
+                port
+            )
+        )
+    }
+
     fun build(): RedisConnection
     {
         if (this.outputStream == null || this.inputStream == null)
         {
-            Socket("127.0.0.1", 6379).apply {
-                this@RedisConnectionBuilder.inputStream = this.getInputStream()
-                this@RedisConnectionBuilder.outputStream = this.getOutputStream()
-            }
+            this.socketOf("127.0.0.1", 6379) // should set the outputStream and inputStream fields
         }
 
         return RedisConnection(
@@ -74,7 +81,7 @@ class RedisConnectionBuilder
             input = inputStream!!,
             dataStream = dataStream,
             encoder = encoder,
-            decoder = decoder
+            decoder = decoder,
         )
     }
 }

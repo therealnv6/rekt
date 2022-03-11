@@ -3,7 +3,6 @@ package io.github.devrawr.rekt.convert
 import io.github.devrawr.rekt.convert.impl.IntTypeConverter
 import io.github.devrawr.rekt.convert.impl.LongTypeConverter
 import io.github.devrawr.rekt.convert.impl.StringTypeConverter
-import java.lang.reflect.Type
 
 object Converters
 {

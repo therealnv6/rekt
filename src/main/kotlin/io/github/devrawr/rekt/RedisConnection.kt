@@ -1,18 +1,19 @@
 package io.github.devrawr.rekt
 
 import io.github.devrawr.rekt.convert.Converters
-import io.github.devrawr.rekt.encoding.Encoder
 import io.github.devrawr.rekt.decoding.Decoder
-import io.github.devrawr.rekt.pubsub.Subscriber
+import io.github.devrawr.rekt.encoding.Encoder
 import io.github.devrawr.rekt.pubsub.DataStream
-import java.io.*
+import io.github.devrawr.rekt.pubsub.Subscriber
+import java.io.InputStream
+import java.io.OutputStream
 
 class RedisConnection(
     private val input: InputStream,
     private val output: OutputStream,
     private val dataStream: DataStream,
     private val decoder: Decoder,
-    private val encoder: Encoder
+    private val encoder: Encoder,
 )
 {
     @JvmName("hgetInline")

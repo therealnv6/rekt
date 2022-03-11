@@ -4,7 +4,6 @@ import io.github.devrawr.rekt.*
 import io.github.devrawr.rekt.decoding.Decoder
 import io.github.devrawr.rekt.decoding.exception.ByteLayoutException
 import java.io.InputStream
-import java.rmi.ServerError
 
 object DefaultRedisDecoder : Decoder
 {
