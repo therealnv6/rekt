@@ -3,8 +3,11 @@ package io.github.devrawr.rekt
 import io.github.devrawr.rekt.decoding.Decoder
 import io.github.devrawr.rekt.encoding.Encoder
 import io.github.devrawr.rekt.pubsub.DataStream
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
 import java.io.InputStream
 import java.io.OutputStream
+import java.net.DatagramSocket
 import java.net.Socket
 
 class RedisConnectionBuilder
@@ -65,7 +68,9 @@ class RedisConnectionBuilder
             Socket(
                 hostname,
                 port
-            )
+            ).apply {
+                this.tcpNoDelay = true
+            }
         )
     }
 
@@ -77,8 +82,8 @@ class RedisConnectionBuilder
         }
 
         return RedisConnection(
-            output = outputStream!!,
-            input = inputStream!!,
+            output = BufferedOutputStream(outputStream!!),
+            input = BufferedInputStream(inputStream!!),
             dataStream = dataStream,
             encoder = encoder,
             decoder = decoder,
