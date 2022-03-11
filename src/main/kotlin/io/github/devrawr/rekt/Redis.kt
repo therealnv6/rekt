@@ -7,7 +7,6 @@ import io.github.devrawr.rekt.decoding.impl.DefaultRedisDecoder
 import io.github.devrawr.rekt.pubsub.DataStream
 import io.github.devrawr.rekt.pubsub.impl.DefaultDataStream
 import io.github.devrawr.rekt.util.ClassReflectionUtil.getOrCreateInstance
-import java.net.Socket
 import kotlin.reflect.KClass
 
 const val STRING = '+'.code
