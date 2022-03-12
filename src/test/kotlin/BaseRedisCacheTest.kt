@@ -10,9 +10,9 @@ class BaseRedisCacheTest
     fun createPool()
     {
         val pool = Redis.builder()
-            .encoderOf(DefaultRedisEncoder)
-            .decoderOf(DefaultRedisDecoder)
-            .socketOf(Socket("127.0.0.1", 6379))
+            .encoderOf(DefaultRedisEncoder) // not required, default value
+            .decoderOf(DefaultRedisDecoder) // not required, default value
+            .socketOf(Socket("127.0.0.1", 6379)) // not required, default value
             .build()
 
         pool.hset("fuck", "dir", "40")

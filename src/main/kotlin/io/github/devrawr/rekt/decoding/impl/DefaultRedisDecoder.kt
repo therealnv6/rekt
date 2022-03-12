@@ -16,7 +16,8 @@ object DefaultRedisDecoder : Decoder
 
         return when (stream.read())
         {
-            STRING, INTEGER -> readString(stream)
+            STRING -> readString(stream).decodeToString()
+            INTEGER -> readString(stream).decodeToString().toLongOrNull()
             ARRAY ->
             {
                 val length = readString(stream)
