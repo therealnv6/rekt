@@ -2,8 +2,23 @@ package io.github.devrawr.rekt.pubsub
 
 import io.github.devrawr.rekt.RedisConnection
 
+/**
+ * Should handle *most* of the pub/sub stuff of redis.
+ *
+ * Most of the documentation can be found at the following link(s):
+ * - https://redis.io/topics/pubsub
+ */
 interface DataStream
 {
+    /**
+     * Write a <b>PUBLISH</b> message to the redis server.
+     *
+     * @param connection the connection to write the message to
+     * @param message    the message to write to the channel
+     * @param channel    the channel to write the message to
+     */
+    fun publish(connection: RedisConnection, message: String, channel: String)
+
     /**
      * Write a <b>SUBSCRIBE</b> message to the redis server.
      *

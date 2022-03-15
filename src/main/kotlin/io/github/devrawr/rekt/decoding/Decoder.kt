@@ -1,5 +1,6 @@
 package io.github.devrawr.rekt.decoding
 
+import io.github.devrawr.rekt.RedisConnection
 import io.github.devrawr.rekt.decoding.exception.ByteLayoutException
 import java.io.IOException
 import java.io.InputStream
@@ -18,19 +19,8 @@ interface Decoder
     /**
      * Decode incoming data from connection stream.
      *
-     * @param stream the underlying stream
+     * @param connection the underlying connection
      * @return the parsed object - nullable
-     * @throws IOException         inherited from underlying stream
-     * @throws ByteLayoutException if it's an unexpected byte layout
      */
-    fun decode(stream: InputStream): Any?
-
-    /**
-     * Scan the input for the next carriage return.
-     *
-     * @param stream the underlying stream to get the next CR from
-     * @return the bytes until the next CR
-     * @throws IOException inherited from underlying stream
-     */
-    fun readString(stream: InputStream): ByteArray
+    fun decode(connection: RedisConnection): Any?
 }

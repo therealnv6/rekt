@@ -1,20 +1,31 @@
 package io.github.devrawr.rekt.convert
 
-import io.github.devrawr.rekt.convert.impl.IntTypeConverter
-import io.github.devrawr.rekt.convert.impl.LongTypeConverter
-import io.github.devrawr.rekt.convert.impl.StringTypeConverter
+import io.github.devrawr.rekt.convert.impl.IntDecodingConverter
+import io.github.devrawr.rekt.convert.impl.LongDecodingConverter
+import io.github.devrawr.rekt.convert.impl.StringDecodingConverter
 
+/**
+ * These converters are simply for classes which are
+ * not natively supported by redis, or if you want
+ * a way to convert a certain type (e.g. RESP String to a Long).
+ *
+ * Basic converter implementation example could be found in the
+ * LongTypeConverter class.
+ *
+ * If you want a RESP converter, look at RESPDecodingConverter instead,
+ * or one of the RESP implementations within the impl/resp package.
+ */
 object Converters
 {
-    private val converters = hashMapOf<Class<*>, TypeConverter<*>>(
-        String::class.java to StringTypeConverter,
-        Long::class.java to LongTypeConverter,
-        Int::class.java to IntTypeConverter
+    private val converters = hashMapOf<Class<*>, DecodingConverter<*>>(
+        String::class.java to StringDecodingConverter,
+        Long::class.java to LongDecodingConverter,
+        Int::class.java to IntDecodingConverter
     )
 
-    inline fun <reified T : Any> retrieveConverter(): TypeConverter<T>? = retrieveConverter(T::class.java)
+    inline fun <reified T : Any> retrieveConverter(): DecodingConverter<T>? = retrieveConverter(T::class.java)
 
-    fun <T : Any> retrieveConverter(type: Class<T>): TypeConverter<T>?
+    fun <T : Any> retrieveConverter(type: Class<T>): DecodingConverter<T>?
     {
         return converters[if (type.kotlin.javaPrimitiveType != null)
         {
@@ -22,17 +33,17 @@ object Converters
         } else
         {
             type
-        }] as TypeConverter<T>?
+        }] as DecodingConverter<T>?
     }
 
-    inline fun <reified T : Any> createConverter(noinline convert: (ByteArray?) -> T?): TypeConverter<T> =
+    inline fun <reified T : Any> createConverter(noinline convert: (ByteArray?) -> T?): DecodingConverter<T> =
         createConverter(T::class.java, convert)
 
-    fun <T : Any> createConverter(type: Class<T>, convert: (ByteArray?) -> T?): TypeConverter<T>
+    fun <T : Any> createConverter(type: Class<T>, convert: (ByteArray?) -> T?): DecodingConverter<T>
     {
         return registerConverter(
             type,
-            object : TypeConverter<T>
+            object : DecodingConverter<T>
             {
                 override fun convert(data: ByteArray?): T?
                 {
@@ -42,7 +53,7 @@ object Converters
         )
     }
 
-    fun <T : Any> registerConverter(type: Class<T>, converter: TypeConverter<T>): TypeConverter<T>
+    fun <T : Any> registerConverter(type: Class<T>, converter: DecodingConverter<T>): DecodingConverter<T>
     {
         return converter.apply {
             converters[type] = this

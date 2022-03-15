@@ -6,6 +6,11 @@ import io.github.devrawr.rekt.pubsub.Subscriber
 
 object DefaultDataStream : DataStream
 {
+    override fun publish(connection: RedisConnection, message: String, channel: String)
+    {
+        connection.call("PUBLISH", channel, message)
+    }
+
     override fun subscribe(connection: RedisConnection, subscriber: Subscriber, vararg channel: String)
     {
         this.globalSubscribeMethod(

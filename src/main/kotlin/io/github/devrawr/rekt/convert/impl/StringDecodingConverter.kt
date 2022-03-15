@@ -1,8 +1,8 @@
 package io.github.devrawr.rekt.convert.impl
 
-import io.github.devrawr.rekt.convert.TypeConverter
+import io.github.devrawr.rekt.convert.DecodingConverter
 
-object StringTypeConverter : TypeConverter<String>
+object StringDecodingConverter : DecodingConverter<String>
 {
     override fun convert(data: ByteArray?): String?
     {

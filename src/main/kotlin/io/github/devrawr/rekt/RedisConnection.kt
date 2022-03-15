@@ -9,11 +9,11 @@ import java.io.InputStream
 import java.io.OutputStream
 
 class RedisConnection(
-    private val input: InputStream,
-    private val output: OutputStream,
-    private val dataStream: DataStream,
-    private val decoder: Decoder,
-    private val encoder: Encoder,
+    val input: InputStream,
+    val output: OutputStream,
+    val dataStream: DataStream,
+    val decoder: Decoder,
+    val encoder: Encoder,
 )
 {
     @JvmName("hgetInline")
@@ -73,33 +73,39 @@ class RedisConnection(
         call("HSET", hash, key, value)
     }
 
-    fun hset(key: String, value: Any)
+    fun hset(string: String, value: Any)
     {
-        val split = key.split("/")
+        val pair = string.toHashKey()
 
-        if (split.size != 2)
-        {
-            throw IllegalArgumentException("Provided key is $key, must be formatted like 'hash/key'")
-        }
+        val hash = pair.first
+        val key = pair.second
 
-        hset(split[0], split[1], value)
+        hset(hash, key, value)
     }
 
-    fun <T : Any> hget(key: String, type: Class<T>): T?
+    fun <T : Any> hget(string: String, type: Class<T>): T?
     {
-        val split = key.split("/")
+        val pair = string.toHashKey()
 
-        if (split.size != 2)
-        {
-            throw IllegalArgumentException("Provided key is $key, must be formatted like 'hash/key'")
-        }
+        val hash = pair.first
+        val key = pair.second
 
-        return hget(split[0], split[1], type)
+        return hget(hash, key, type)
     }
 
     fun <T : Any> hget(hash: String, key: String, type: Class<T>): T?
     {
         return callReturnRead(type, "HGET", hash, key)
+    }
+
+    fun hdel(string: String)
+    {
+        val pair = string.toHashKey()
+
+        val hash = pair.first
+        val key = pair.second
+
+        hdel(hash, key)
     }
 
     fun hdel(hash: String, key: String)
@@ -126,7 +132,6 @@ class RedisConnection(
 
     fun publish(channel: String, message: String)
     {
-        call("PUBLISH", channel, message)
     }
 
     fun subscribe(subscriber: Subscriber, vararg channel: String)
@@ -170,13 +175,13 @@ class RedisConnection(
     private fun <T : Any> read(type: Class<T>): T?
     {
         val converter = Converters.retrieveConverter(type)
-        val decoded = decoder.decode(input)
+        val decoded = decoder.decode(this)
             ?: return null
 
         val converted = try
         {
             decoded as T
-        } catch (ignored: java.lang.ClassCastException)
+        } catch (ignored: ClassCastException)
         {
             decoded as ByteArray
         }
@@ -194,5 +199,17 @@ class RedisConnection(
         {
             converted as T?
         }
+    }
+
+    fun String.toHashKey(): Pair<String, String>
+    {
+        val split = this.split("/")
+
+        if (split.size != 2)
+        {
+            throw IllegalArgumentException("Provided key is $this, must be formatted like 'hash/key'")
+        }
+
+        return Pair(split[0], split[1])
     }
 }
