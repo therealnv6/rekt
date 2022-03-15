@@ -36,7 +36,7 @@ class RedisConnection(
 
     fun call(args: List<*>)
     {
-        encoder.write(output, args)
+        encoder.write(this, args)
         output.flush()
 
         this.read(ByteArray::class.java) // even though we're not returning this, we're still reading to clear the buffer!
@@ -47,7 +47,7 @@ class RedisConnection(
         // don't call this.call(List<*>), we want to handle this.read() on our own,
         // but because call(List<*>) already calls this.read(), the buffer will be cleared,
         // causing us to not receive any data.
-        encoder.write(output, args)
+        encoder.write(this, args)
         output.flush()
 
         return this.read(type)
