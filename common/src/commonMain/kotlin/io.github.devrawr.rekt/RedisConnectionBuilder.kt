@@ -1,3 +1,6 @@
+package io.github.devrawr.rekt
+
+import dispatcher
 import io.ktor.network.selector.*
 import io.ktor.network.sockets.*
 import io.ktor.util.*

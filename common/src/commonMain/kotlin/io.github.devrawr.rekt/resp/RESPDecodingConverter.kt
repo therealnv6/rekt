@@ -1,7 +1,7 @@
-package resp
+package io.github.devrawr.rekt.resp
 
-import RedisConnection
-import resp.decoding.exception.ByteLayoutException
+import io.github.devrawr.rekt.RedisConnection
+import io.github.devrawr.rekt.resp.decoding.exception.ByteLayoutException
 import io.ktor.utils.io.*
 
 interface RESPDecodingConverter<T>

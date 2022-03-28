@@ -1,6 +1,6 @@
 package bindings
 
-import RedisConnection
+import io.github.devrawr.rekt.RedisConnection
 import Converters
 import kotlin.reflect.KClass
 

@@ -1,6 +1,6 @@
-package resp.encoding
+package io.github.devrawr.rekt.resp.encoding
 
-import RedisConnection
+import io.github.devrawr.rekt.RedisConnection
 import io.ktor.utils.io.core.*
 
 interface Encoder

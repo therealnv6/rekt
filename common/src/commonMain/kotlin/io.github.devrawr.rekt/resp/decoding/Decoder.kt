@@ -1,6 +1,6 @@
-package resp.decoding
+package io.github.devrawr.rekt.resp.decoding
 
-import RedisConnection
+import io.github.devrawr.rekt.RedisConnection
 
 /**
  * Mainly for reading the incoming data of the redis stream.

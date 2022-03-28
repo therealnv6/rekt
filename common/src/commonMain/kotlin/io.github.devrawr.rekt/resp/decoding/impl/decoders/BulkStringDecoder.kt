@@ -1,8 +1,8 @@
-package resp.decoding.impl.decoders
+package io.github.devrawr.rekt.resp.decoding.impl.decoders
 
-import RedisConnection
-import resp.RESPDecodingConverter
-import resp.decoding.exception.ByteLayoutException
+import io.github.devrawr.rekt.RedisConnection
+import io.github.devrawr.rekt.resp.RESPDecodingConverter
+import io.github.devrawr.rekt.resp.decoding.exception.ByteLayoutException
 
 object BulkStringDecoder : RESPDecodingConverter<ByteArray>
 {

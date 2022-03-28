@@ -1,10 +1,10 @@
-package resp.encoding.impl
+package io.github.devrawr.rekt.resp.encoding.impl
 
 import ARRAY
 import BULK_STRING
 import INTEGER
-import RedisConnection
-import resp.encoding.Encoder
+import io.github.devrawr.rekt.RedisConnection
+import io.github.devrawr.rekt.resp.encoding.Encoder
 import io.ktor.utils.io.*
 
 object DefaultRedisEncoder : Encoder

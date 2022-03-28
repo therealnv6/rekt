@@ -1,7 +1,7 @@
-package resp.decoding.impl.decoders
+package io.github.devrawr.rekt.resp.decoding.impl.decoders
 
-import RedisConnection
-import resp.RESPDecodingConverter
+import io.github.devrawr.rekt.RedisConnection
+import io.github.devrawr.rekt.resp.RESPDecodingConverter
 
 object ArrayDecoder : RESPDecodingConverter<List<*>>
 {

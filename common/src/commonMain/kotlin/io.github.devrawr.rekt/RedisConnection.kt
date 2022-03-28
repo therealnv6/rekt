@@ -1,8 +1,13 @@
-import bindings.callReturnRead
-import resp.decoding.Decoder
-import resp.decoding.impl.DefaultRedisDecoder
-import resp.encoding.Encoder
-import resp.encoding.impl.DefaultRedisEncoder
+package io.github.devrawr.rekt
+
+import io.github.devrawr.rekt.bindings.callReturnRead
+import io.github.devrawr.rekt.resp.decoding.Decoder
+import io.github.devrawr.rekt.resp.decoding.impl.DefaultRedisDecoder
+import io.github.devrawr.rekt.resp.encoding.Encoder
+import io.github.devrawr.rekt.resp.encoding.impl.DefaultRedisEncoder
+import io.github.devrawr.rekt.stream.DataStream
+import io.github.devrawr.rekt.stream.Subscriber
+import io.github.devrawr.rekt.stream.impl.DefaultDataStream
 import io.ktor.util.*
 import io.ktor.utils.io.*
 
@@ -13,6 +18,7 @@ class RedisConnection(
 {
     var decoder: Decoder = DefaultRedisDecoder
     var encoder: Encoder = DefaultRedisEncoder
+    var dataStream: DataStream = DefaultDataStream
 
     companion object
     {
@@ -109,6 +115,16 @@ class RedisConnection(
         return call.map {
             it
         }
+    }
+
+    suspend fun subscribe(subscriber: Subscriber, vararg channel: String)
+    {
+        this.dataStream.subscribe(this, subscriber, *channel)
+    }
+
+    suspend fun pSubscribe(subscriber: Subscriber, vararg pattern: String)
+    {
+        this.dataStream.pSubscribe(this, subscriber, *pattern)
     }
 
     private suspend fun read(): Any?

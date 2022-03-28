@@ -1,14 +1,14 @@
-package resp.decoding.impl
+package io.github.devrawr.rekt.resp.decoding.impl
 
 import ARRAY
 import BULK_STRING
 import ERROR
 import INTEGER
-import RedisConnection
 import STRING
-import resp.RESPDecodingConverter
-import resp.decoding.Decoder
-import resp.decoding.impl.decoders.*
+import io.github.devrawr.rekt.*
+import io.github.devrawr.rekt.resp.RESPDecodingConverter
+import io.github.devrawr.rekt.resp.decoding.impl.decoders.*
+import io.github.devrawr.rekt.resp.decoding.Decoder
 
 object DefaultRedisDecoder : Decoder
 {
