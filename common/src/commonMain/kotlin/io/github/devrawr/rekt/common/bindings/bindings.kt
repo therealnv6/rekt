@@ -1,0 +1,36 @@
+package io.github.devrawr.rekt.common.bindings
+
+import io.github.devrawr.rekt.common.RedisConnection
+import io.github.devrawr.rekt.common.stream.Subscriber
+
+suspend fun RedisConnection.callReturnRead(vararg args: Any): Any? =
+    callReturnRead(args.toList())
+
+
+suspend fun RedisConnection.subscribe(vararg channel: String, subscriber: (message: String) -> Unit)
+{
+    subscribe(
+        subscriber = object : Subscriber
+        {
+            override suspend fun handleIncoming(channel: String, message: String)
+            {
+                subscriber.invoke(message)
+            }
+        },
+        channel = channel
+    )
+}
+
+suspend fun RedisConnection.pSubscribe(vararg pattern: String, subscriber: (message: String) -> Unit)
+{
+    this.pSubscribe(
+        subscriber = object : Subscriber
+        {
+            override suspend fun handleIncoming(channel: String, message: String)
+            {
+                subscriber.invoke(message)
+            }
+        },
+        pattern = pattern
+    )
+}
