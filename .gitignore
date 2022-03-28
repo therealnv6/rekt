@@ -12,6 +12,5 @@ rebel.xml
 !src/**/build/
 gradle-app.setting
 #!gradle-wrapper.jar
-gradle.properties
 .gradletasknamecache
 !lib/*.jar

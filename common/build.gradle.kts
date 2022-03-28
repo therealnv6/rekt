@@ -1,8 +1,8 @@
 plugins {
-    kotlin("multiplatform") version "1.6.10"
+    kotlin("multiplatform")
 }
 
-val ktorVersion = "1.6.8"
+val ktorVersion: String by project
 
 kotlin {
     sourceSets {
@@ -12,7 +12,6 @@ kotlin {
 
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-network:$ktorVersion")
-
             }
         }
 
