@@ -4,11 +4,9 @@ import dispatcher
 import io.ktor.network.selector.*
 import io.ktor.network.sockets.*
 import io.ktor.util.*
-import io.ktor.util.network.*
 
 enum class ConnectionType
 {
-    UDP,
     TCP
 }
 
@@ -55,18 +53,11 @@ class RedisConnectionBuilder
         val thread = dispatcher
         val socketBuilder = aSocket(SelectorManager(thread))
 
-        val socket = if (this.connectionType == ConnectionType.TCP)
-        {
+        val socket =
             socketBuilder
                 .tcp()
                 .connect(this.hostname, this.port)
-        } else
-        {
-            socketBuilder.udp()
-                .connect(
-                    NetworkAddress(this.hostname, this.port)
-                )
-        }
+
 
         return RedisConnection(
             readChannel = socket.openReadChannel(),
