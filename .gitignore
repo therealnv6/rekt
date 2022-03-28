@@ -1,0 +1,17 @@
+.idea/
+*.iml
+*.iws
+.DS_Store
+log/
+/target/
+dependency-reduced-pom.xml
+rebel.xml
+#gradle
+.gradle
+**/build/
+!src/**/build/
+gradle-app.setting
+#!gradle-wrapper.jar
+gradle.properties
+.gradletasknamecache
+!lib/*.jar
