@@ -8,18 +8,16 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
-
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("io.ktor:ktor-network:$ktorVersion")
+                compileOnly(kotlin("stdlib-common"))
+                compileOnly("io.ktor:ktor-client-core:$ktorVersion")
+                compileOnly("io.ktor:ktor-network:$ktorVersion")
             }
         }
 
         jvm().compilations["main"].defaultSourceSet {
             dependsOn(commonMain)
             dependencies {
-                implementation("io.ktor:ktor-client-java:$ktorVersion")
-
+                compileOnly("io.ktor:ktor-client-java:$ktorVersion")
             }
         }
     }

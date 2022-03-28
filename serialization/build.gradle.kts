@@ -6,8 +6,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":common"))
-                implementation(kotlin("stdlib-common"))
+                compileOnly(project(":common"))
+                compileOnly(kotlin("stdlib-common"))
             }
         }
 
