@@ -16,12 +16,12 @@ suspend inline fun <reified T : Any> RedisConnection.hget(string: String): T?
 
 suspend inline fun <reified T : Any> RedisConnection.hget(hash: String, key: String): T?
 {
-    return callReturnRead("HGET", hash, key)
+    return callReturnRead<T>("HGET", hash, key)
 }
 
 suspend inline fun <reified T : Any> RedisConnection.get(key: String): T?
 {
-    return callReturnRead(key)
+    return callReturnRead<T>(key)
 }
 
 suspend inline fun <reified T : Any> RedisConnection.hgetAll(hash: String): List<T?>
