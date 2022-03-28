@@ -4,6 +4,7 @@ plugins {
 
 val ktorVersion: String by project
 
+
 kotlin {
     sourceSets {
         val commonMain by getting {
@@ -14,10 +15,23 @@ kotlin {
             }
         }
 
-        jvm().compilations["main"].defaultSourceSet {
-            dependsOn(commonMain)
-            dependencies {
-                compileOnly("io.ktor:ktor-client-java:$ktorVersion")
+        val ktorIds = mapOf(
+            jvm().compilations["main"].defaultSourceSet to "java",
+            js().compilations["main"].defaultSourceSet to "js",
+
+            // Could not resolve io.ktor:ktor-network:1.6.8., todo: fix
+//            linuxX64().compilations["main"].defaultSourceSet to "curl",
+//            mingwX64().compilations["main"].defaultSourceSet to "curl",
+            macosX64().compilations["main"].defaultSourceSet to "ios"
+        )
+
+        for (ktorId in ktorIds)
+        {
+            val sourceSet = ktorId.key
+
+            sourceSet.dependsOn(commonMain)
+            sourceSet.dependencies {
+                compileOnly("io.ktor:ktor-client-${ktorId.value}:$ktorVersion")
             }
         }
     }
